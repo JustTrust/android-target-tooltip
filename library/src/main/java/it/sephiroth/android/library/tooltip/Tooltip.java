@@ -64,8 +64,8 @@ public final class Tooltip {
     }
 
     @SuppressWarnings ("unused")
-    public static TooltipView make(Context context, Builder builder) {
-        return new TooltipViewImpl(context, builder);
+    public static TooltipView make(Context context, Builder builder, @Nullable ViewGroup rootView) {
+        return new TooltipViewImpl(context, builder, rootView);
     }
 
     @SuppressWarnings ("unused")
@@ -394,8 +394,10 @@ public final class Tooltip {
             };
 
         private boolean mIsCustomView;
+        private ViewGroup mRootView;
 
-        public TooltipViewImpl(Context context, final Builder builder) {
+
+        public TooltipViewImpl(Context context, final Builder builder, @Nullable ViewGroup rootView) {
             super(context);
 
             TypedArray theme =
@@ -411,7 +413,7 @@ public final class Tooltip {
             String font = theme.getString(R.styleable.TooltipLayout_ttlm_font);
 
             theme.recycle();
-
+            this.mRootView = rootView;
             this.mToolTipId = builder.id;
             this.mText = builder.text;
             this.mGravity = builder.gravity;
@@ -485,7 +487,9 @@ public final class Tooltip {
             if (getParent() == null) {
                 final Activity act = Utils.getActivity(getContext());
                 LayoutParams params = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
-                if (act != null) {
+                if (mRootView != null){
+                    mRootView.addView(this, params);
+                }else if (act != null) {
                     ViewGroup rootView;
                     rootView = (ViewGroup) (act.getWindow().getDecorView());
                     rootView.addView(this, params);

@@ -186,6 +186,7 @@ public class MainActivity3 extends AppCompatActivity implements AdapterView.OnIt
                             }
                         })
                     .build()
+                    , null
             );
             mCurrentTooltip.show();
         }
